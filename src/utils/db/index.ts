@@ -9,5 +9,10 @@ const initModels = models(sequelize)
 
 export default {
     sequelize,
-    User: initModels.user
+    User: initModels.user,
+    Authentication: initModels.authentication,
+    UserOtp: initModels.userOtp,
+    Notification: initModels.notification,
+    Role: initModels.role,
+    UsersRoles: initModels.usersRoles
 }

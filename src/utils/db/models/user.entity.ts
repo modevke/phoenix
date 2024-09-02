@@ -29,7 +29,7 @@ export type UserAttributes = {
 
 type UserCreationAttributes = Optional<UserAttributes, "id">;
 
-class User extends Model<UserAttributes, UserCreationAttributes> {
+export class User extends Model<UserAttributes, UserCreationAttributes> {
   declare id: CreationOptional<number>;
   declare firstName: string;
   declare lastName: string | null;
@@ -42,6 +42,7 @@ class User extends Model<UserAttributes, UserCreationAttributes> {
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare deletedAt: Date | null;
+
 }
 
 export function UserEntity(sequelize: Sequelize) {
@@ -104,7 +105,7 @@ export function UserEntity(sequelize: Sequelize) {
       },
     },
     {
-      tableName: "users",
+      tableName: "user",
       sequelize,
       timestamps: true,
       paranoid: true,

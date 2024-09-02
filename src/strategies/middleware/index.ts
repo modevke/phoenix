@@ -3,7 +3,6 @@ import { IdempotenceMiddlewareStrategy } from "./idempotence.middleware"
 import { LabelMiddlewareStrategy } from "./label.middleware"
 import { ValidationMiddlewareStrategy } from "./validator.middleware"
 
-
 export interface MiddlewareStrategy {
     execute(): any
 }
@@ -49,7 +48,7 @@ export function executeMiddleware( data: MiddlewareExecutions){
     if(data.idempotence){
         m.addMs(new IdempotenceMiddlewareStrategy())
     }
-    return m .run()
+    return m.run()
 }
 
 

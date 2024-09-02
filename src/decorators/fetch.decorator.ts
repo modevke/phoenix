@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import db from "../../db";
+import db from "../utils/db";
 
 interface FetchOptions {
   options(): Map<string, any>;
@@ -143,7 +143,7 @@ export class JoinDecorator extends FetchDecorator {
           const model = {
             model: db[el],
           };
-          if (el === "User") {
+          if (el === "Authentication") {
             model["attributes"] = {
               exclude: ["hashedPassword"],
             };

@@ -2,7 +2,7 @@ import { Transaction } from "sequelize";
 import { CommandResponses } from "../global";
 
 export interface Command {
-  execute(): Promise<CommandResponses>;
+  execute(): CommandResponses | Promise<CommandResponses>;
 }
 
 export class TaskScheduler {

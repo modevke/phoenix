@@ -1,6 +1,6 @@
-import { Command } from "..";
-import { CommandResponses, MailOptions } from "../../global";
-import { ReqMaker } from "../../utils/common/reqmaker";
+import { Command } from ".";
+import { CommandResponses, MailOptions } from "../global";
+import { ReqMaker } from "../utils/common/reqmaker";
 import config from 'config';
 
 const { url } = config.get<MailOptions>('serverConfigs.mail');

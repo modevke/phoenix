@@ -1,7 +1,12 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Router, Request, Response } from "express";
 import { UserService } from "./user.service";
-import { executeMiddleware } from "../../../middleware";
-import { SignInDto } from "./user.dto";
+import { executeMiddleware } from "../../../strategies/middleware";
+import {
+  ResetPasswordDto,
+  SignInDto,
+  UpdateUserDto,
+  VerifyUserEsbDto,
+} from "./user.dto";
 
 export const userControllerRouter = Router();
 
@@ -103,17 +108,159 @@ userControllerRouter.get(
 userControllerRouter.post(
   "/sign-in",
   executeMiddleware({
-    auth: true,
+    auth: false,
     label: "User Sign In",
-    validation: SignInDto
+    validation: SignInDto,
   }),
   UserService.userSignIn
 );
 
-userControllerRouter.post("/check-id", async (req, res) => {});
+/**
+ * @swagger
+ * /api/users/verify-user-esb:
+ *   post:
+ *     tags:
+ *       - user
+ *     summary: Verify user in esb
 
-userControllerRouter.post("/reset-password", async (req, res) => {});
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/VerifyUserEsb'
+ *     responses:
+ *       200:
+ *         description: Success response.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
+userControllerRouter.post(
+  "/verify-user-esb",
+  executeMiddleware({
+    auth: false,
+    label: "Verify user in esb",
+    validation: VerifyUserEsbDto,
+  }),
+  UserService.verifyUserFromESB
+);
 
-userControllerRouter.patch("/:id", async (req, res) => {});
+/**
+ * @swagger
+ * /api/users/reset-password:
+ *   post:
+ *     tags:
+ *       - user
+ *     summary: Reset password
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ResetPassword'
+ *     responses:
+ *       200:
+ *         description: Success response.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
+userControllerRouter.post(
+  "/reset-password",
+  executeMiddleware({
+    auth: false,
+    label: "Reset password",
+    validation: ResetPasswordDto,
+  }),
+  UserService.resetUserPassword
+);
 
-userControllerRouter.delete("/:id", async (req, res) => {});
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   patch:
+ *     tags:
+ *       - user
+ *     summary: Update one user
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: User id
+ *         schema:
+ *           type: integer
+ *       - in: header
+ *         name: idempotence-token
+ *         required: true
+ *         description: Ensure that a request can only be processed once, even if the client retries due to network errors or other issues.
+ *         type: string
+ *     description: Permissions => **[can_update_user]**
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateUser'
+ *     responses:
+ *       200:
+ *         description: Success response.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
+userControllerRouter.patch(
+  "/:id",
+  executeMiddleware({
+    auth: false,
+    label: "Update one user",
+    validation: UpdateUserDto,
+    idempotence: true,
+  }),
+  UserService.updateUser
+);
+
+/**
+ * @swagger
+ * /user-api/users/{id}:
+ *   delete:
+ *     tags:
+ *       - user
+ *     summary: Delete one user
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: User id
+ *         schema:
+ *           type: integer
+ *       - in: header
+ *         name: idempotence-token
+ *         required: true
+ *         description: Ensure that a request can only be processed once, even if the client retries due to network errors or other issues.
+ *         type: string
+ *     description: Permissions => **[can_delete_user]**
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success response.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
+userControllerRouter.delete(
+  "/:id",
+  executeMiddleware({
+    auth: false,
+    label: "Delete one user",
+    idempotence: true,
+  }),
+  UserService.deleteUser
+);

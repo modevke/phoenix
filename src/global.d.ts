@@ -1,4 +1,4 @@
-import {Options} from 'sequelize'
+import { Options } from "sequelize";
 
 export type ServerConfig = {
   maintenance: boolean;
@@ -15,18 +15,27 @@ export type ServerConfig = {
 
 export type OperationalOptions = {
   maxLogInAttempts: number;
-}
+  esb: ESBOptions;
+};
+
+type ESBOptions = {
+  url: string;
+  apiUser: string;
+  apiPassword: string;
+};
 
 type JwtOptions = {
   secretKey: string;
   expiresIn: string;
-}
+  refreshSecretKey: string;
+  refreshExpiresIn: string;
+};
 
 type PoolOptions = {
   max: number;
   min: number;
   idle: number;
-}
+};
 
 type DocsOptions = {
   show: boolean;
@@ -45,22 +54,24 @@ type CorsOptions = {
 };
 
 export type CommandResponses = {
-    error: boolean;
-    continue: boolean;
-    errorCode?: string;
-    data?: any;
-    message?: string;
-}
+  error: boolean;
+  continue: boolean;
+  errorCode?: string;
+  data?: any;
+  message?: string;
+  errorMessage?: string;
+  res?: any;
+};
 
 export type HTTPRequest = {
-    url: string;
-    method: any;
-    data: any
-    headers: any,
-    timeout: number,
-    continue?:  boolean
-}
+  url: string;
+  method: any;
+  data?: any;
+  headers?: any;
+  timeout?: number;
+  continue?: boolean;
+};
 
 export type MailOptions = {
   url: string;
-}
+};
